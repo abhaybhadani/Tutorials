@@ -1,0 +1,7 @@
+*.pyc
+*.swp
+*.log
+*env*
+__pycache__
+glove*
+.ipynb_checkpoints
