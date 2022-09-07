@@ -8,18 +8,27 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 import pandas as pd
 import string
+import pickle
 
 # import requests
 
 app = Flask(__name__)
 
 # load json and create model
-json_file = open('./models/test.json', 'r')
+
+# Load the model architecture    
+json_file = open('./models/test_model.json', 'r')
 loaded_model = model_from_json(json_file.read())
 json_file.close()
 
 # load weights into new model
-loaded_model.load_weights("./models/test.json.h5")
+loaded_model.load_weights("./models/test_model.h5")
+print("Loaded model from disk")
+
+# loading tokens
+with open('./models/test_model.token', 'rb') as handle:
+    tokenizer = pickle.load(handle)
+
 print("Loaded model from disk")
 
 sentiment_labels = ['sadness', 'anger', 'love', 'surprise', 'fear', 'joy']
@@ -43,7 +52,6 @@ def predict_sentiment():
         print('text= ', text)
         text="I love text analysis"
 
-    tokenizer = Tokenizer(num_words=5000)
     tw = preprocessingText1(pd.Series(text))
     tw = tokenizer.texts_to_sequences(tw)
     tw = pad_sequences(tw, maxlen= 63)
